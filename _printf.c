@@ -4,7 +4,7 @@ static int handle_specifier(const char *format, int *i,
 			    va_list args, spec_t funcs[]);
 
 /**
- * _printf - A custom implementation of the printf function.
+ * _printf - A custom implementation printf function.
  * @format: The format string.
  *
  * Return: The number of characters printed.
@@ -12,6 +12,7 @@ static int handle_specifier(const char *format, int *i,
 int _printf(const char *format, ...)
 {
 	int i = 0, count = 0;
+	int printed_chars;
 	va_list args;
 	spec_t funcs[] = {
 		{"c", print_char},
@@ -29,7 +30,13 @@ int _printf(const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			count += handle_specifier(format, &i, args, funcs);
+			printed_chars = handle_specifier(format, &i, args, funcs);
+			if (printed_chars == -1)
+			{
+				va_end(args);
+				return (-1);
+			}
+			count += printed_chars;
 		}
 		else
 		{
