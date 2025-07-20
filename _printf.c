@@ -1,91 +1,5 @@
 #include "main.h"
 
-static int handle_specifier(const char *format, int *i,
-			    va_list args, spec_t funcs[]);
-static int print_unsigned_number(unsigned int n);
-
-/**
- * _printf - A custom implementation of the printf function.
- * @format: The format string.
- *
- * Return: The number of characters printed.
- */
-int _printf(const char *format, ...)
-{
-	int i = 0, count = 0;
-	int printed_chars;
-	va_list args;
-	spec_t funcs[] = {
-		{"c", print_char},
-		{"s", print_string},
-		{"%", print_percent},
-		{"d", print_integer},
-		{"i", print_integer},
-		{NULL, NULL}
-	};
-
-	if (format == NULL)
-		return (-1);
-
-	va_start(args, format);
-
-	while (format && format[i])
-	{
-		if (format[i] == '%')
-		{
-			printed_chars = handle_specifier(format, &i, args, funcs);
-			if (printed_chars == -1)
-			{
-				va_end(args);
-				return (-1);
-			}
-			count += printed_chars;
-		}
-		else
-		{
-			_putchar(format[i]);
-			count++;
-		}
-		i++;
-	}
-	va_end(args);
-	return (count);
-}
-
-/**
- * handle_specifier - Handles the format specifier logic for _printf.
- * @format: The format string.
- * @i: Pointer to the current index in the format string.
- * @args: The va_list of arguments.
- * @funcs: The array of specifier-function mappings.
- *
- * Return: The number of characters printed by the handler.
- */
-static int handle_specifier(const char *format, int *i,
-			    va_list args, spec_t funcs[])
-{
-	int j = 0, count = 0;
-
-	(*i)++;
-
-	if (format[*i] == '\0')
-		return (-1);
-
-	while (funcs[j].spec != NULL)
-	{
-		if (*(funcs[j].spec) == format[*i])
-		{
-			count += funcs[j].f(args);
-			return (count);
-		}
-		j++;
-	}
-
-	_putchar('%');
-	_putchar(format[*i]);
-	return (2);
-}
-
 /**
  * print_char - Prints a character.
  * @args: A list of arguments pointing to the character to be printed.
@@ -133,6 +47,25 @@ int print_percent(__attribute__((unused))va_list args)
 }
 
 /**
+ * print_unsigned_number - Prints an unsigned integer recursively.
+ * @n: The unsigned integer to print.
+ *
+ * Return: The number of characters printed.
+ */
+static int print_unsigned_number(unsigned int n)
+{
+	int count = 0;
+
+	if (n / 10)
+	{
+		count += print_unsigned_number(n / 10);
+	}
+	_putchar((n % 10) + '0');
+	count++;
+	return (count);
+}
+
+/**
  * print_integer - Prints an integer for %d and %i specifiers.
  * @args: The va_list containing the integer to print.
  *
@@ -159,20 +92,83 @@ int print_integer(va_list args)
 }
 
 /**
- * print_unsigned_number - Prints an unsigned integer recursively.
- * @n: The unsigned integer to print.
+ * handle_specifier - Handles the format specifier logic for _printf.
+ * @format: The format string.
+ * @i: Pointer to the current index in the format string.
+ * @args: The va_list of arguments.
+ * @funcs: The array of specifier-function mappings.
+ *
+ * Return: The number of characters printed by the handler.
+ */
+static int handle_specifier(const char *format, int *i,
+			    va_list args, spec_t funcs[])
+{
+	int j = 0, count = 0;
+
+	(*i)++;
+
+	if (format[*i] == '\0')
+		return (-1);
+
+	while (funcs[j].spec != NULL)
+	{
+		if (*(funcs[j].spec) == format[*i])
+		{
+			count += funcs[j].f(args);
+			return (count);
+		}
+		j++;
+	}
+
+	_putchar('%');
+	_putchar(format[*i]);
+	return (2);
+}
+
+/**
+ * _printf - A custom implementation of the printf function.
+ * @format: The format string.
  *
  * Return: The number of characters printed.
  */
-static int print_unsigned_number(unsigned int n)
+int _printf(const char *format, ...)
 {
-	int count = 0;
+	int i = 0, count = 0;
+	int printed_chars;
+	va_list args;
+	spec_t funcs[] = {
+		{"c", print_char},
+		{"s", print_string},
+		{"%", print_percent},
+		{"d", print_integer},
+		{"i", print_integer},
+		{NULL, NULL}
+	};
 
-	if (n / 10)
+	if (format == NULL)
+		return (-1);
+
+	va_start(args, format);
+
+	while (format && format[i])
 	{
-		count += print_unsigned_number(n / 10);
+		if (format[i] == '%')
+		{
+			printed_chars = handle_specifier(format, &i, args, funcs);
+			if (printed_chars == -1)
+			{
+				va_end(args);
+				return (-1);
+			}
+			count += printed_chars;
+		}
+		else
+		{
+			_putchar(format[i]);
+			count++;
+		}
+		i++;
 	}
-	_putchar((n % 10) + '0');
-	count++;
+	va_end(args);
 	return (count);
 }
