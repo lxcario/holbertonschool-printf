@@ -1,0 +1,45 @@
+_printf(3)                 Holberton School                 _printf(3)
+
+AD
+       _printf - Formatlanmis setri standart cixisa cap edir.
+
+SYNOPSIS
+       #include "main.h"
+
+       int _printf(const char *format, ...);
+
+TESVIR
+       _printf funksiyasi formatlanmis setri standart cixisa yazir.
+       Format setri oldugu kimi cap olunan adi metnden ve xususi
+       format teyinedicilerinden ibaret ola biler.
+
+       Format teyinedicileri '%' simvolu ile baslayir ve funksiyaya
+       oturulen arqumentleri mueyyen bir formatda cap etmek ucun
+       istifade olunur.
+
+   FORMAT TEYINEDICILERI
+       Asagidaki teyinediciler islenir:
+
+       c      Tek bir simvolu cap edir.
+
+       s      Simvollardan ibaret setri cap edir. Eger setir
+              gostericisi NULL olarsa, onun yerine `(null)` cap edir.
+
+       d, i   Isareli tam ededi cap edir.
+
+       %      Herfi faiz isaresini, `%%` cap edir.
+
+QAYTARILAN DEYER
+       Ugurlu olduqda, _printf cap edilmis simvollarin umumi sayini
+       qaytarir.
+
+       Xeta bas vererse, -1 qaytarir. Format setri NULL olarsa ve ya
+       teyin edilmemis '%' ile biterse, xeta bas verecek.
+
+MUELLIFLER
+       Resque
+
+HEMCININ BAXIN
+       printf(3)
+
+_printf(3)                 Iyul 2025                        _printf(3)
